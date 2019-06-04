@@ -11,8 +11,6 @@ function n2 = dist2(x, c)
 %	I, Jth entry is the squared distance from the Ith row of X to the
 %	Jth row of C.
 %
-%
-%	Copyright (c) Ian T Nabney (1996-2001)
 
 [ndata, dimx] = size(x);
 [ncentres, dimc] = size(c);

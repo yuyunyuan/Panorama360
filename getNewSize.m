@@ -1,37 +1,36 @@
-function [newH, newW, x1, y1, x2, y2] = getNewSize(transform, h2, w2, h1, w1)
-% Calculate the size of new mosaic
+function [height, width, newimgX, newimgY, imgX, imgY] = getNewSize(transform, h_warp, w_warp, h_unwarp, w_unwarp)
+% Calculate the size of new image
 % Input:
 % transform - homography matrix
-% h1 - height of the unwarped image
-% w1 - width of the unwarped image
-% h2 - height of the warped image
-% w2 - height of the warped image
+% h_unwarp - height of the unwarped image
+% w_unwarp - width of the unwarped image
+% h_warp - height of the warped image
+% w_warp - width of the warped image
 % Output:
-% newH - height of the new image
-% newW - width of the new image
-% x1 - x coordate of lefttop corner of new image
-% y1 - y coordate of lefttop corner of new image
-% x2 - x coordate of lefttop corner of unwarped image
-% y2 - y coordate of lefttop corner of unwarped image
-% 
+% height - height of the new image
+% width - width of the new image
+% newimgX - new x coordate of lefttop corner of new image
+% newimgY - new y coordate of lefttop corner of new image
+% imgX - new x coordate of lefttop corner of unwarped image
+% imgY - new y coordate of lefttop corner of unwarped image
 
 
-% CREATE MESH-GRID FOR THE WARPED IMAGE
-[X,Y] = meshgrid(1:w2,1:h2);
-AA = ones(3,h2*w2);
-AA(1,:) = reshape(X,1,h2*w2);
-AA(2,:) = reshape(Y,1,h2*w2);
+
+[X,Y] = meshgrid(1:w_warp,1:h_warp);
+newimage = ones(3,h_warp*w_warp);
+newimage(1,:) = reshape(X,1,h_warp*w_warp);
+newimage(2,:) = reshape(Y,1,h_warp*w_warp);
 
 % DETERMINE THE FOUR CORNER OF NEW IMAGE
-newAA = transform\AA;
-new_left = fix(min([1,min(newAA(1,:)./newAA(3,:))]));
-new_right = fix(max([w1,max(newAA(1,:)./newAA(3,:))]));
-new_top = fix(min([1,min(newAA(2,:)./newAA(3,:))]));
-new_bottom = fix(max([h1,max(newAA(2,:)./newAA(3,:))]));
+newimage = mldivide(transform,newimage);
+left = fix(min([1,min(newimage(1,:)./newimage(3,:))]));
+right = fix(max([w_unwarp,max(newimage(1,:)./newimage(3,:))]));
+top = fix(min([1,min(newimage(2,:)./newimage(3,:))]));
+bottom = fix(max([h_unwarp,max(newimage(2,:)./newimage(3,:))]));
 
-newH = new_bottom - new_top + 1;
-newW = new_right - new_left + 1;
-x1 = new_left;
-y1 = new_top;
-x2 = 2 - new_left;
-y2 = 2 - new_top;
+newimgX = left;
+newimgY = top;
+imgX = 2-left;
+imgY = 2-top;
+height = bottom - top + 1;
+width = right - left + 1;

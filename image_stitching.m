@@ -3,10 +3,10 @@ function [output_image] = image_stitching(input_A, input_B)
 % 1. Load both images, convert to double and to grayscale.
 % 2. Detect feature points in both images.
 % 3. Extract fixed-size patches around every keypoint in both images, and
-% form descriptors simply by "flattening" the pixel values in each patch to
+% form distances simply by "flattening" the pixel values in each patch to
 % one-dimensional vectors.
-% 4. Compute distances between every descriptor in one image and every descriptor in the other image. 
-% 5. Select putative matches based on the matrix of pairwise descriptor
+% 4. Compute distances between every distance in one image and every distance in the other image. 
+% 5. Select putative matches based on the matrix of pairwise distance
 % distances obtained above. 
 % 6. Run RANSAC to estimate (1) an affine transformation and (2) a
 % homography mapping one image onto the other. 
@@ -61,9 +61,9 @@ sigma = 7;
 dist = dist2(des_A,des_B);
 [ord_dist, index] = sort(dist, 2);
 % THE RATIO OF FIRST AND SECOND DISTANCE IS A BETTER CRETIA THAN DIRECTLY
-% USING THE DISTANCE. RATIO LESS THAN .5 GIVES AN ACCEPTABLE ERROR RATE.
+% USING THE DISTANCE. RATIO LESS THAN .6 GIVES AN ACCEPTABLE ERROR RATE.
 ratio = ord_dist(:,1)./ord_dist(:,2);
-threshold = 0.5;
+threshold = 0.6;
 idx = ratio<threshold;
 
 x_A = x_A(idx);
@@ -108,7 +108,7 @@ newImage(:,:,2) = interp2(X, Y, double(image_A(:,:,2)), XX, YY);
 newImage(:,:,3) = interp2(X, Y, double(image_A(:,:,3)), XX, YY);
 
 % BLEND IMAGE BY CROSS DISSOLVE
-[newImage,~] = blend(newImage, image_B, xB, yB);
+[newImage,~] = blended(newImage, image_B, xB, yB);
 % DISPLAY IMAGE MOSIAC
 [~,n,~]=size(newImage);
 % newImage=newImage(yB:yB+size(input_A,1)-1,1:n,:);
