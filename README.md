@@ -7,7 +7,7 @@ also show the dramatic fashion. Therefore, effectively replicate the experience 
 there. Now some smartphone applications can provide this technology which will assist
 users to finish the construction of 360 panoramas, or even spherical panoramas.
 
-Wriiten in Matlab. Run through Main2.m
+Written in Matlab. Run through Main2.m
 
 ## Objectives
 Design and implement n program to create a 360-degree
